@@ -3,48 +3,45 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 
-function NewBeer () {
+function NewBeer() {
+  const [form, setForm] = useState({
+    name: "",
+    tagline: "",
+    description: "",
+    first_brewed: "",
+    brewers_tips: "",
+    attenuation_level: 0,
+    contributed_by: "",
+  });
 
-    const [form, setForm] = useState({
-      name: "",
-      tagline: "",
-      description: "",
-      first_brewed: "",
-      brewers_tips: "",
-      attenuation_level: 0,
-      contributed_by: "",
+  const navigate = useNavigate();
+
+  const handleForm = (e) => {
+    setForm((previous) => {
+      return {
+        ...previous,
+        [e.target.name]: e.target.value,
+      };
     });
+  };
 
-    const navigate = useNavigate(); 
-    
-    const handleForm = e => {
-        setForm(previous => {
-            return {
-              ...previous,
-              [e.target.name]: e.target.value,
-            };
-        })
-    }
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios
+      .post(`https://ih-beers-api2.herokuapp.com/beers/new`, form)
+      .then(() => {
+        navigate("/beers");
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
 
-    const handleSubmit = e => {
-        e.preventDefault();
-        axios
-            .post(`https://ih-beers-api2.herokuapp.com/beers/new`, form)
-            .then(() => {
-                navigate('/beers')
-            })
-            .catch(error => {
-                console.log(error)
-            })
-
-    }
-
-
-    return (
+  return (
     <>
-    <Header/>
-      <div className="new-beer-container">
-        <div className="new-beer-card">
+      <Header />
+      <div className="new-container">
+        <div className="new-card">
           <h1>Add New Beer</h1>
           <form onSubmit={handleSubmit}>
             <label>Name</label>
@@ -100,9 +97,8 @@ function NewBeer () {
           </form>
         </div>
       </div>
-      </>
-    );    
-
+    </>
+  );
 }
 
-export default NewBeer
+export default NewBeer;
